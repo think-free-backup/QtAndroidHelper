@@ -257,7 +257,6 @@ public class QtService extends Service {
         startForeground(1337, note);
     }
 
-private
     public static void notify(String s)
     {
         if (m_notificationManager == null) {
