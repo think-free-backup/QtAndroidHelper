@@ -34,11 +34,11 @@ public class QtService extends Service {
     private Class m_class = QtServiceActivity.class;
 
     private static ServiceInfo m_serviceInfo = null;
-    private static NotificationManager m_notificationManager;
-    private static Notification.Builder m_builder;
+    protected static NotificationManager m_notificationManager;
+    protected static Notification.Builder m_builder;
+    protected static PendingIntent pi;
     private static QtService m_instance;
     private static String m_lib_name;
-    private static PendingIntent pi;
 
     private static final String ERROR_CODE_KEY = "error.code";
     private static final String DEX_PATH_KEY = "dex.path";
@@ -78,22 +78,9 @@ public class QtService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId)
     {
 
-        /* Notifiication */
+        /* Notification */
 
-        Notification note=new Notification(m_serviceInfo.metaData.getInt("android.app.notificon"),"",System.currentTimeMillis());
-
-        Intent i=new Intent(m_instance, m_class);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        pi=PendingIntent.getActivity(this, 0,
-                                i, 0);
-
-        note.setLatestEventInfo(this, m_lib_name ,
-            "Running",
-            pi);
-        note.flags|=Notification.FLAG_NO_CLEAR;
-
-        startForeground(1337, note);
+        createNotification();
 
         /* Start the app */
 
@@ -252,6 +239,25 @@ public class QtService extends Service {
 
     /* Notification methods */
 
+    protected void createNotification(){
+
+        Notification note=new Notification(m_serviceInfo.metaData.getInt("android.app.notificon"),"",System.currentTimeMillis());
+
+        Intent i=new Intent(m_instance, m_class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        pi=PendingIntent.getActivity(this, 0,
+                                i, 0);
+
+        note.setLatestEventInfo(this, m_lib_name ,
+            "Running",
+            pi);
+        note.flags|=Notification.FLAG_NO_CLEAR;
+
+        startForeground(1337, note);
+    }
+
+private
     public static void notify(String s)
     {
         if (m_notificationManager == null) {
